@@ -34,19 +34,31 @@ public class UserServiceImpl implements UserService{
 		}
 	}
 	// add User 
-	@Override
 	@POST
 	@Path("/add")
+	@Override
 	public Response addUser(User u) {
-		Response response = new Response();
-		Session session = this.sessionFactory.getCurrentSession();
-		session.beginTransaction();
-		session.persist(u);
-		response.setStatus(true);
-		response.setMessage("User Added Succssfully!");
-		session.getTransaction().commit();
-		return response;
+	    Session session = this.sessionFactory.getCurrentSession();
+	    session.beginTransaction();
+
+	    Response response = new Response();
+	    try {
+	        // Use merge to handle both new and detached entities
+	        session.merge(u);
+
+	        session.getTransaction().commit();
+	        response.setStatus(true);
+	        response.setMessage("User added successfully!");
+	    } catch (Exception e) {
+	        if (session.getTransaction().isActive()) {
+	            session.getTransaction().rollback();
+	        }
+	        response.setStatus(false);
+	        response.setMessage("Error adding user: " + e.getMessage());
+	    }
+	    return response;
 	}
+
 	
 	
 	//delete 
@@ -63,6 +75,7 @@ public class UserServiceImpl implements UserService{
 			response.setStatus(true);
 			response.setMessage("User Deleted Succssfully!");
 		}
+
 		session.getTransaction().commit();
 		return response;
 	}
@@ -91,11 +104,17 @@ public class UserServiceImpl implements UserService{
 	@Path("get/{id}")
 	@Override
 	public User getUserById(@PathParam("id") Long id) {
-		System.out.println("getUsrrById");
+		System.out.println("getUserById");
+		Response response = new Response();
 		Session session = this.sessionFactory.getCurrentSession();
-		session.beginTransaction();
+		
 		User user = (User) session.getReference(User.class, Long.valueOf(id));
-		session.getTransaction();
+		if (user == null) {
+			response.setStatus(false);
+			response.setMessage("User Doesn's Exist!");
+		}
+		session.beginTransaction();
+		session.getTransaction().commit();
 		return user; 
 	}
 
