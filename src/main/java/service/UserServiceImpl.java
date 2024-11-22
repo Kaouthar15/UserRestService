@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService{
 
 	    Response response = new Response();
 	    try {
-	        // Use merge to handle both new and detached entities
 	        session.merge(u);
 
 	        session.getTransaction().commit();
