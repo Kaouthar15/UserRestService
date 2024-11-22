@@ -8,10 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @XmlRootElement
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
@@ -46,6 +49,6 @@ public class User{
 	}
 	
 	public String toString() {
-		return "  name -> " +name + " email -> "   + email;
+		return "  name -> " +name + " email ->  "   + email;
 	}
 }

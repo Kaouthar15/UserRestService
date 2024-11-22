@@ -13,6 +13,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import model.Response;
 import model.User;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService{
 	@GET
 	@Path("delete/{id}")
 	@Override
-	public Response deleteUser(Long id) {
+	public Response deleteUser(@PathParam("id") Long id) {
 		Response response = new Response();
 		Session session = this.sessionFactory.getCurrentSession();
 		session.beginTransaction();
@@ -71,13 +72,11 @@ public class UserServiceImpl implements UserService{
 	@Path("getAll")
 	@Override
 	public List<User> getAllUsers() {
-		System.out.println("first");
 		List<User> users = new ArrayList<User>();
 		try {
 			Session session = this.sessionFactory.getCurrentSession();
 			session.beginTransaction();
 			users = session.createQuery("Select u from User u",User.class).list();
-			System.out.println("list all users");
 			session.getTransaction().begin();
 		}catch(Exception e) {
 			Response response = new Response();
@@ -91,7 +90,8 @@ public class UserServiceImpl implements UserService{
 	@GET
 	@Path("get/{id}")
 	@Override
-	public User getUserById(Long id) {
+	public User getUserById(@PathParam("id") Long id) {
+		System.out.println("getUsrrById");
 		Session session = this.sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		User user = (User) session.getReference(User.class, Long.valueOf(id));
