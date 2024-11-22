@@ -46,6 +46,6 @@ public class User{
 	}
 	
 	public String toString() {
-		return name + " <- name " + email + " <- email " ;
+		return "  name -> " +name + " email -> "   + email;
 	}
 }
