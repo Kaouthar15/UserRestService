@@ -71,6 +71,7 @@ public class UserServiceImpl implements UserService{
 	@Path("getAll")
 	@Override
 	public List<User> getAllUsers() {
+		System.out.println("first");
 		List<User> users = new ArrayList<User>();
 		try {
 			Session session = this.sessionFactory.getCurrentSession();
