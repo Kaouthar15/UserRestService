@@ -103,18 +103,25 @@ public class UserServiceImpl implements UserService{
 	@Path("get/{id}")
 	@Override
 	public User getUserById(@PathParam("id") Long id) {
-		System.out.println("getUserById");
-		Response response = new Response();
-		Session session = this.sessionFactory.getCurrentSession();
-		
-		User user = (User) session.getReference(User.class, Long.valueOf(id));
-		if (user == null) {
-			response.setStatus(false);
-			response.setMessage("User Doesn's Exist!");
-		}
-		session.beginTransaction();
-		session.getTransaction().commit();
-		return user; 
+	    System.out.println("getUserById");
+	    Session session = this.sessionFactory.getCurrentSession();
+	    session.beginTransaction();
+
+	    try {
+	        User user = session.get(User.class, id);
+
+	        if (user == null) {
+	            throw new RuntimeException("User Doesn't Exist!");
+	        }
+
+	        session.getTransaction().commit();
+	        return user;
+	    } catch (Exception e) {
+	        if (session.getTransaction().isActive()) {
+	            session.getTransaction().rollback();
+	        }
+	        throw new RuntimeException("Error fetching user: " + e.getMessage(), e);
+	    }
 	}
 
 }

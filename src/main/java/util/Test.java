@@ -9,7 +9,7 @@ import service.UserServiceImpl;
 public class Test {
 	public static void main(String[] args) {
 		UserServiceImpl userServiceImpl = new UserServiceImpl();
-		List<User> users = new ArrayList<User>();
+		List<User> users = new ArrayList<User>();	
 		users = userServiceImpl.getAllUsers();
 		System.out.println(users);
 	}
